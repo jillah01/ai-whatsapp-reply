@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReplyAI - WhatsApp Reply Assistant</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>ReplyAI</h1>
+    <p class="subtitle">
+        Turn any customer message into a professional reply.
+    </p>
+
+    <label>Customer message</label>
+
+    <textarea
+        id="message"
+        placeholder="Example: bhai order kab ayega?"
+    ></textarea>
+
+    <div class="row">
+
+        <div>
+            <label>Language</label>
+
+            <select id="language">
+                <option value="Hinglish">Hinglish</option>
+                <option value="Hindi">Hindi</option>
+                <option value="English">English</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Tone</label>
+
+            <select id="tone">
+                <option value="Friendly">Friendly</option>
+                <option value="Professional">Professional</option>
+                <option value="Short">Short</option>
+            </select>
+        </div>
+
+    </div>
+
+    <button id="generateBtn">
+        Generate Reply
+    </button>
+
+    <div id="loading" class="hidden">
+        Generating...
+    </div>
+
+    <div id="resultBox" class="hidden">
+
+        <label>Generated reply</label>
+
+        <textarea
+            id="result"
+            readonly
+        ></textarea>
+
+        <button id="copyBtn">
+            Copy Reply
+        </button>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
