@@ -9,6 +9,8 @@ const resultBox = document.getElementById("resultBox");
 const result = document.getElementById("result");
 const loading = document.getElementById("loading");
 
+const API_URL = "https://reply-ai-api.xjillah.workers.dev";
+
 generateBtn.addEventListener("click", async () => {
 
     const message = messageInput.value.trim();
@@ -20,45 +22,43 @@ generateBtn.addEventListener("click", async () => {
 
     loading.classList.remove("hidden");
     resultBox.classList.add("hidden");
+    generateBtn.disabled = true;
 
     try {
 
-        const response = await fetch(
-            "YOUR_CLOUDFLARE_WORKER_URL",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    message,
-                    language: languageInput.value,
-                    tone: toneInput.value
-                })
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error("Server error");
-        }
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message,
+                language: languageInput.value,
+                tone: toneInput.value
+            })
+        });
 
         const data = await response.json();
 
-        result.value = data.reply;
+        if (!response.ok) {
+            throw new Error(data.error || "Server error");
+        }
 
+        result.value = data.reply;
         resultBox.classList.remove("hidden");
 
     } catch (error) {
 
-        alert(
-            "Something went wrong. Please try again."
-        );
-
         console.error(error);
+
+        alert(
+            "Something went wrong: " + error.message
+        );
 
     } finally {
 
         loading.classList.add("hidden");
+        generateBtn.disabled = false;
 
     }
 
@@ -66,12 +66,19 @@ generateBtn.addEventListener("click", async () => {
 
 copyBtn.addEventListener("click", async () => {
 
-    await navigator.clipboard.writeText(result.value);
+    if (!result.value) return;
 
-    copyBtn.innerText = "Copied!";
+    try {
+        await navigator.clipboard.writeText(result.value);
 
-    setTimeout(() => {
-        copyBtn.innerText = "Copy Reply";
-    }, 1500);
+        copyBtn.innerText = "Copied!";
+
+        setTimeout(() => {
+            copyBtn.innerText = "Copy Reply";
+        }, 1500);
+
+    } catch (error) {
+        console.error(error);
+    }
 
 });
