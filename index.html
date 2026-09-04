@@ -1,78 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReplyAI - WhatsApp Reply Assistant</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#111827" />
+  <title>ReplyAI — WhatsApp Reply Assistant</title>
+  <meta name="description" content="Create natural WhatsApp replies for customers in seconds." />
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
+  <main class="app">
+    <header class="hero">
+      <div class="logo">Reply<span>AI</span></div>
+      <h1>Reply to customers in seconds.</h1>
+      <p>Choose what you need, set the tone, and get a ready-to-send WhatsApp reply.</p>
+    </header>
 
-<div class="container">
+    <section class="card">
+      <label class="section-label">What kind of reply?</label>
 
-    <h1>ReplyAI</h1>
-    <p class="subtitle">
-        Turn any customer message into a professional reply.
-    </p>
+      <div class="category-grid" id="categoryGrid">
+        <button type="button" class="category active" data-category="General">💬<span>General</span></button>
+        <button type="button" class="category" data-category="Order update">📦<span>Order</span></button>
+        <button type="button" class="category" data-category="Payment reminder">💰<span>Payment</span></button>
+        <button type="button" class="category" data-category="Delivery update">🚚<span>Delivery</span></button>
+        <button type="button" class="category" data-category="Customer complaint">😡<span>Complaint</span></button>
+        <button type="button" class="category" data-category="Refund or return">🔄<span>Refund</span></button>
+        <button type="button" class="category" data-category="Appointment">📅<span>Appointment</span></button>
+        <button type="button" class="category" data-category="Review request">⭐<span>Review</span></button>
+      </div>
 
-    <label>Customer message</label>
+      <label for="message">Customer message</label>
+      <textarea id="message" maxlength="1000" placeholder="Example: bhai order kab ayega?"></textarea>
+      <div class="input-meta"><span id="inputCount">0/1000</span></div>
 
-    <textarea
-        id="message"
-        placeholder="Example: bhai order kab ayega?"
-    ></textarea>
-
-    <div class="row">
-
+      <div class="controls">
         <div>
-            <label>Language</label>
-
-            <select id="language">
-                <option value="Hinglish">Hinglish</option>
-                <option value="Hindi">Hindi</option>
-                <option value="English">English</option>
-            </select>
+          <label for="language">Language</label>
+          <select id="language">
+            <option value="Hinglish">Hinglish</option>
+            <option value="Hindi">Hindi</option>
+            <option value="English">English</option>
+          </select>
         </div>
 
         <div>
-            <label>Tone</label>
+          <label for="tone">Tone</label>
+          <select id="tone">
+            <option value="Friendly">Friendly</option>
+            <option value="Professional">Professional</option>
+            <option value="Very Short">Very Short</option>
+            <option value="Polite">Polite</option>
+            <option value="Apologetic">Apologetic</option>
+          </select>
+        </div>
+      </div>
 
-            <select id="tone">
-                <option value="Friendly">Friendly</option>
-                <option value="Professional">Professional</option>
-                <option value="Short">Short</option>
-            </select>
+      <button id="generateBtn" class="primary" type="button">Generate Reply</button>
+
+      <div id="status" class="status" aria-live="polite"></div>
+
+      <div id="resultSection" class="result hidden">
+        <div class="result-header">
+          <label for="result">Your reply</label>
+          <span id="charCount">0 characters</span>
         </div>
 
-    </div>
+        <textarea id="result" readonly></textarea>
 
-    <button id="generateBtn">
-        Generate Reply
-    </button>
+        <div class="result-actions">
+          <button id="copyBtn" class="secondary" type="button">📋 Copy Reply</button>
+          <button id="whatsappBtn" class="secondary" type="button">🟢 Open WhatsApp</button>
+        </div>
+      </div>
+    </section>
 
-    <div id="loading" class="hidden">
-        Generating...
-    </div>
+    <footer>
+      <p>ReplyAI MVP • AI reply assistant for small businesses.</p>
+    </footer>
+  </main>
 
-    <div id="resultBox" class="hidden">
-
-        <label>Generated reply</label>
-
-        <textarea
-            id="result"
-            readonly
-        ></textarea>
-
-        <button id="copyBtn">
-            Copy Reply
-        </button>
-
-    </div>
-
-</div>
-
-<script src="app.js"></script>
-
+  <script src="app.js"></script>
 </body>
 </html>
