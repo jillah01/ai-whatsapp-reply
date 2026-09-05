@@ -1,114 +1,113 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ReplyAI</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>ReplyAI — AI Customer Replies</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main class="app">
-  <header class="hero">
-    <div class="logo">Reply<span>AI</span></div>
-    <h1>AI customer replies for small businesses</h1>
-    <p>Login to save your business profile and reply history.</p>
-  </header>
+<header class="hero">
+  <div class="logo">Reply<span>AI</span></div>
+  <p>Professional customer replies in seconds.</p>
+</header>
 
-  <section id="authCard" class="card auth">
-    <div class="tabs">
-      <button id="loginTab" class="tab active" type="button">Login</button>
-      <button id="signupTab" class="tab" type="button">Create account</button>
+<section id="authCard" class="card auth">
+  <div class="tabs">
+    <button id="loginTab" class="tab active" type="button">Login</button>
+    <button id="signupTab" class="tab" type="button">Create account</button>
+  </div>
+  <h2 id="authTitle">Welcome back</h2>
+  <p id="authSubtitle">Login with your email and password.</p>
+  <label for="email">Email</label>
+  <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
+  <label for="password">Password</label>
+  <input id="password" type="password" autocomplete="current-password" placeholder="At least 6 characters">
+  <button id="authBtn" class="primary" type="button">Login</button>
+  <button id="forgotBtn" class="text-btn" type="button">Forgot password?</button>
+  <div id="authMessage" class="message"></div>
+</section>
+
+<section id="appSection" class="hidden">
+  <div class="account-bar">
+    <div><strong id="userEmail"></strong><small>Signed in</small></div>
+    <button id="logoutBtn" class="secondary compact" type="button">Log out</button>
+  </div>
+
+  <section class="card">
+    <div class="section-title">
+      <div><h2>Business profile</h2><p>Saved to your account.</p></div>
     </div>
-    <h2 id="authTitle">Welcome back</h2>
-    <p id="authSubtitle">Login with your email and password.</p>
-
-    <label for="email">Email</label>
-    <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
-
-    <label for="password">Password</label>
-    <input id="password" type="password" autocomplete="current-password" placeholder="At least 6 characters">
-
-    <button id="authBtn" class="primary" type="button">Login</button>
-    <button id="forgotBtn" class="text-btn" type="button">Forgot password?</button>
-    <div id="authMessage" class="message"></div>
+    <div class="grid2">
+      <div><label for="businessName">Business name</label><input id="businessName" maxlength="80" placeholder="Sharma Electronics"></div>
+      <div><label for="businessType">Business type</label><input id="businessType" maxlength="80" placeholder="Mobile shop"></div>
+    </div>
+    <div class="grid2">
+      <div><label for="language">Default language</label><select id="language"><option>Hinglish</option><option>Hindi</option><option>English</option></select></div>
+      <div><label for="tone">Default tone</label><select id="tone"><option>Friendly</option><option>Professional</option><option>Very Short</option><option>Polite</option><option>Apologetic</option></select></div>
+    </div>
+    <label for="style">Business voice</label>
+    <textarea id="style" class="small" maxlength="300" placeholder="Warm, concise, respectful and simple Hinglish."></textarea>
+    <button id="saveProfileBtn" class="secondary" type="button">Save profile</button>
+    <div id="profileMessage" class="message"></div>
   </section>
 
-  <section id="appSection" class="hidden">
-    <div class="account-bar">
-      <div><strong id="userEmail"></strong><small>Signed in</small></div>
-      <button id="logoutBtn" class="secondary compact" type="button">Log out</button>
+  <section class="card">
+    <div class="section-title">
+      <div><h2>Quick reply</h2><p>Choose a type, tone and language.</p></div>
+      <div class="usage"><strong id="usageCount">0/20</strong><small>free replies this month</small></div>
     </div>
 
-    <section class="card">
-      <div class="section-title"><div><h2>Business profile</h2><p>Saved to your account.</p></div></div>
+    <div class="category-grid">
+      <button class="category active" data-category="General" type="button">💬<span>General</span></button>
+      <button class="category" data-category="Order update" type="button">📦<span>Order</span></button>
+      <button class="category" data-category="Payment reminder" type="button">💰<span>Payment</span></button>
+      <button class="category" data-category="Delivery update" type="button">🚚<span>Delivery</span></button>
+      <button class="category" data-category="Customer complaint" type="button">😡<span>Complaint</span></button>
+      <button class="category" data-category="Refund or return" type="button">🔄<span>Refund</span></button>
+      <button class="category" data-category="Appointment" type="button">📅<span>Appointment</span></button>
+      <button class="category" data-category="Review request" type="button">⭐<span>Review</span></button>
+    </div>
 
+    <label for="message">Customer message</label>
+    <textarea id="message" maxlength="1000" placeholder="bhai mera order kab ayega?"></textarea>
+    <div class="meta"><span id="inputCount">0/1000</span><span>10 requests/minute protection</span></div>
+
+    <div class="grid2">
+      <div><label for="replyLanguage">Language</label><select id="replyLanguage"><option>Hinglish</option><option>Hindi</option><option>English</option></select></div>
+      <div><label for="replyTone">Tone</label><select id="replyTone"><option>Friendly</option><option>Professional</option><option>Very Short</option><option>Polite</option><option>Apologetic</option></select></div>
+    </div>
+
+    <button id="generateBtn" class="primary" type="button">Generate Reply</button>
+    <div id="status" class="message"></div>
+
+    <div id="resultSection" class="hidden result">
+      <div class="result-head"><label for="result">Your reply</label><span id="charCount">0 characters</span></div>
+      <textarea id="result" readonly></textarea>
       <div class="grid2">
-        <div><label for="businessName">Business name</label><input id="businessName" maxlength="80" placeholder="Sharma Electronics"></div>
-        <div><label for="businessType">Business type</label><input id="businessType" maxlength="80" placeholder="Mobile shop"></div>
+        <button id="copyBtn" class="secondary" type="button">📋 Copy</button>
+        <button id="whatsappBtn" class="secondary" type="button">🟢 WhatsApp</button>
       </div>
-
-      <div class="grid2">
-        <div>
-          <label for="language">Default language</label>
-          <select id="language"><option>Hinglish</option><option>Hindi</option><option>English</option></select>
-        </div>
-        <div>
-          <label for="tone">Default tone</label>
-          <select id="tone"><option>Friendly</option><option>Professional</option><option>Very Short</option><option>Polite</option><option>Apologetic</option></select>
-        </div>
+      <div class="rewrite-actions">
+        <button id="shorterBtn" type="button">Make shorter</button>
+        <button id="politeBtn" type="button">Make more polite</button>
+        <button id="professionalBtn" type="button">Make professional</button>
       </div>
-
-      <label for="style">Business voice</label>
-      <textarea id="style" class="small" maxlength="300" placeholder="Warm, concise, respectful and simple Hinglish."></textarea>
-      <button id="saveProfileBtn" class="secondary" type="button">Save profile</button>
-      <div id="profileMessage" class="message"></div>
-    </section>
-
-    <section class="card">
-      <div class="section-title">
-        <div><h2>Quick reply</h2><p>Choose a type, then generate.</p></div>
-        <div class="usage"><strong id="usageCount">0</strong><small>this session</small></div>
-      </div>
-
-      <div class="category-grid">
-        <button class="category active" data-category="General" type="button">💬<span>General</span></button>
-        <button class="category" data-category="Order update" type="button">📦<span>Order</span></button>
-        <button class="category" data-category="Payment reminder" type="button">💰<span>Payment</span></button>
-        <button class="category" data-category="Delivery update" type="button">🚚<span>Delivery</span></button>
-        <button class="category" data-category="Customer complaint" type="button">😡<span>Complaint</span></button>
-        <button class="category" data-category="Refund or return" type="button">🔄<span>Refund</span></button>
-        <button class="category" data-category="Appointment" type="button">📅<span>Appointment</span></button>
-        <button class="category" data-category="Review request" type="button">⭐<span>Review</span></button>
-      </div>
-
-      <label for="message">Customer message</label>
-      <textarea id="message" maxlength="1000" placeholder="bhai order kab ayega?"></textarea>
-      <div class="meta"><span id="inputCount">0/1000</span><span>Protected API</span></div>
-
-      <div class="grid2">
-        <div><label for="replyLanguage">Language</label><select id="replyLanguage"><option>Hinglish</option><option>Hindi</option><option>English</option></select></div>
-        <div><label for="replyTone">Tone</label><select id="replyTone"><option>Friendly</option><option>Professional</option><option>Very Short</option><option>Polite</option><option>Apologetic</option></select></div>
-      </div>
-
-      <button id="generateBtn" class="primary" type="button">Generate Reply</button>
-      <div id="status" class="message"></div>
-
-      <div id="resultSection" class="hidden result">
-        <div class="result-head"><label for="result">Your reply</label><span id="charCount">0 characters</span></div>
-        <textarea id="result" readonly></textarea>
-        <div class="grid2">
-          <button id="copyBtn" class="secondary" type="button">📋 Copy</button>
-          <button id="whatsappBtn" class="secondary" type="button">🟢 WhatsApp</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="section-title"><div><h2>Recent replies</h2><p>Saved to your account.</p></div><button id="clearHistoryBtn" class="text-btn" type="button">Clear all</button></div>
-      <div id="history" class="history"></div>
-    </section>
+    </div>
   </section>
+
+  <section class="card">
+    <div class="section-title">
+      <div><h2>Recent replies</h2><p>Saved to your account.</p></div>
+      <button id="clearHistoryBtn" class="text-btn" type="button">Clear all</button>
+    </div>
+    <div id="history" class="history"></div>
+  </section>
+</section>
 </main>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
 </body>
