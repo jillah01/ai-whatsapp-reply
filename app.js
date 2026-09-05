@@ -1,257 +1,198 @@
+const SUPABASE_URL = "https://penntuaofjveawocdvgp.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_QKbxDKVM1s9X3SQpK4_mlw_gs7gwWCs";
 const API_URL = "https://reply-ai-api.xjillah.workers.dev";
-const PROFILE_KEY = "replyai_profile_v4";
-const HISTORY_KEY = "replyai_history_v4";
 
-const $ = (id) => document.getElementById(id);
-let selectedCategory = "General";
-let history = loadHistory();
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+let signupMode = false, currentUser = null, selectedCategory = "General", history = [], usage = 0;
 
-function loadProfile() {
-  try {
-    const p = JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}");
-    $("businessName").value = p.businessName || "";
-    $("businessType").value = p.businessType || "";
-    $("language").value = p.language || "Hinglish";
-    $("tone").value = p.tone || "Friendly";
-    $("style").value = p.style || "";
-    $("replyLanguage").value = p.language || "Hinglish";
-    $("replyTone").value = p.tone || "Friendly";
-  } catch {}
+const $ = id => document.getElementById(id);
+const setText = (id, text) => $(id).textContent = text;
+
+function authMessage(t){ setText("authMessage", t); }
+function status(t){ setText("status", t); }
+
+function switchMode(signup){
+  signupMode = signup;
+  $("loginTab").classList.toggle("active", !signup);
+  $("signupTab").classList.toggle("active", signup);
+  setText("authTitle", signup ? "Create your account" : "Welcome back");
+  setText("authSubtitle", signup ? "Create an account with email and password." : "Login with your email and password.");
+  setText("authBtn", signup ? "Create account" : "Login");
+  authMessage("");
 }
 
-function getProfile() {
-  try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}"); }
-  catch { return {}; }
+async function auth(){
+  const email = $("email").value.trim(), password = $("password").value;
+  if(!email || !password) return authMessage("Enter email and password.");
+  if(password.length < 6) return authMessage("Password must be at least 6 characters.");
+  $("authBtn").disabled = true;
+  try{
+    if(signupMode){
+      const {data,error} = await sb.auth.signUp({email,password});
+      if(error) throw error;
+      if(data.session) showApp(data.user);
+      else authMessage("Account created. Check your email to confirm, then log in.");
+    }else{
+      const {data,error} = await sb.auth.signInWithPassword({email,password});
+      if(error) throw error;
+      showApp(data.user);
+    }
+  }catch(e){ authMessage(e.message); }
+  $("authBtn").disabled = false;
 }
 
-function saveProfile(showMessage = true) {
-  const p = {
-    businessName: $("businessName").value.trim(),
-    businessType: $("businessType").value.trim(),
-    language: $("language").value,
-    tone: $("tone").value,
-    style: $("style").value.trim()
-  };
-  localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
-  $("replyLanguage").value = p.language;
-  $("replyTone").value = p.tone;
-  if (showMessage) {
-    $("profileStatus").textContent = "Business profile saved on this browser.";
-    setTimeout(() => $("profileStatus").textContent = "", 1800);
-  }
+async function forgot(){
+  const email = $("email").value.trim();
+  if(!email) return authMessage("Enter your email first.");
+  const {error} = await sb.auth.resetPasswordForEmail(email,{redirectTo:"https://jillah01.github.io/ai-whatsapp-reply/"});
+  authMessage(error ? error.message : "Password reset email sent.");
 }
 
-function clearProfile() {
-  localStorage.removeItem(PROFILE_KEY);
-  $("businessName").value = "";
-  $("businessType").value = "";
-  $("language").value = "Hinglish";
-  $("tone").value = "Friendly";
-  $("style").value = "";
-  $("replyLanguage").value = "Hinglish";
-  $("replyTone").value = "Friendly";
-  $("profileStatus").textContent = "Profile cleared.";
+async function showApp(user){
+  currentUser = user;
+  $("authCard").classList.add("hidden");
+  $("appSection").classList.remove("hidden");
+  setText("userEmail", user.email || "Account");
+  await loadData();
 }
 
-function loadHistory() {
-  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]"); }
-  catch { return []; }
-}
-
-function storeHistory() {
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, 10)));
+function hideApp(){
+  currentUser = null;
+  $("authCard").classList.remove("hidden");
+  $("appSection").classList.add("hidden");
+  history = [];
   renderHistory();
 }
 
-function sameDay(ts) {
-  return new Date(ts).toDateString() === new Date().toDateString();
-}
-
-function escapeHtml(text) {
-  return String(text).replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[c]));
-}
-
-function renderHistory() {
-  $("todayCount").textContent = String(history.filter(x => sameDay(x.time)).length);
-  if (!history.length) {
-    $("history").innerHTML = '<div class="history-empty">No saved replies yet.</div>';
-    return;
+async function loadData(){
+  const {data:profile} = await sb.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
+  if(profile){
+    $("businessName").value = profile.business_name || "";
+    $("businessType").value = profile.business_type || "";
+    $("language").value = profile.language || "Hinglish";
+    $("tone").value = profile.tone || "Friendly";
+    $("style").value = profile.business_style || "";
+    $("replyLanguage").value = profile.language || "Hinglish";
+    $("replyTone").value = profile.tone || "Friendly";
   }
-  $("history").innerHTML = history.map((item, i) => `
-    <article class="history-item">
-      <div class="history-top">
-        <span class="history-tag">${escapeHtml(item.category)}</span>
-        <span class="history-date">${escapeHtml(new Date(item.time).toLocaleString())}</span>
-      </div>
-      <p class="history-message">${escapeHtml(item.message)}</p>
-      <p class="history-reply">${escapeHtml(item.reply)}</p>
-      <div class="history-actions">
-        <button type="button" data-action="use" data-index="${i}">Use reply</button>
-        <button type="button" data-action="copy" data-index="${i}">Copy</button>
-      </div>
-    </article>
-  `).join("");
+
+  const {data:rows} = await sb.from("reply_history").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(10);
+  history = rows || [];
+  renderHistory();
 }
 
-function addHistory(message, reply) {
-  history.unshift({ message, reply, category: selectedCategory, time: Date.now() });
-  history = history.slice(0, 10);
-  storeHistory();
+async function saveProfile(){
+  const payload = {
+    id:currentUser.id,
+    business_name:$("businessName").value.trim(),
+    business_type:$("businessType").value.trim(),
+    language:$("language").value,
+    tone:$("tone").value,
+    business_style:$("style").value.trim(),
+    updated_at:new Date().toISOString()
+  };
+  const {error} = await sb.from("profiles").upsert(payload);
+  setText("profileMessage", error ? "Save failed: " + error.message : "Profile saved.");
 }
 
-function updateCounts() {
-  $("inputCount").textContent = `${$("message").value.length}/1000`;
-  $("charCount").textContent = `${$("result").value.length} characters`;
-}
+async function callAI(action="generate"){
+  const session = (await sb.auth.getSession()).data.session;
+  if(!session) throw new Error("Please log in again.");
 
-function setStatus(text) {
-  $("status").textContent = text;
-}
-
-async function requestAI(action = "generate") {
-  const profile = getProfile();
-  const existingReply = $("result").value.trim();
-
-  const response = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      message: $("message").value.trim(),
-      language: $("replyLanguage").value,
-      tone: $("replyTone").value,
-      category: selectedCategory,
-      businessName: profile.businessName || "",
-      businessType: profile.businessType || "",
-      businessStyle: profile.style || "",
+  const response = await fetch(API_URL,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":`Bearer ${session.access_token}`
+    },
+    body:JSON.stringify({
+      message:$("message").value.trim(),
+      language:$("replyLanguage").value,
+      tone:$("replyTone").value,
+      category:selectedCategory,
+      businessName:$("businessName").value.trim(),
+      businessType:$("businessType").value.trim(),
+      businessStyle:$("style").value.trim(),
       action,
-      existingReply
+      existingReply:$("result").value.trim()
     })
   });
-
-  const data = await response.json().catch(() => ({}));
-
-  if (response.status === 429) {
-    throw new Error("Too many requests. Please wait about a minute and try again.");
-  }
-  if (!response.ok) throw new Error(data.error || "Request failed.");
-  if (!data.reply) throw new Error("No reply was returned.");
+  const data = await response.json().catch(()=>({}));
+  if(response.status===429) throw new Error("Too many requests. Please wait about a minute.");
+  if(response.status===401) throw new Error("Please log in again.");
+  if(!response.ok) throw new Error(data.error || "Request failed.");
+  if(!data.reply) throw new Error("No reply returned.");
   return data.reply;
 }
 
-async function generate() {
+async function generate(){
   const message = $("message").value.trim();
-  if (!message) {
-    setStatus("Please enter the customer's message.");
-    $("message").focus();
-    return;
-  }
+  if(!message) return status("Enter the customer's message.");
 
-  $("generateBtn").disabled = true;
-  $("generateBtn").textContent = "Generating...";
-  setStatus("");
-
-  try {
-    const reply = await requestAI("generate");
+  $("generateBtn").disabled = true; $("generateBtn").textContent = "Generating..."; status("");
+  try{
+    const reply = await callAI();
     $("result").value = reply;
-    updateCounts();
     $("resultSection").classList.remove("hidden");
-    addHistory(message, reply);
-    setStatus("Reply generated and saved.");
-  } catch (e) {
-    console.error(e);
-    setStatus(`Error: ${e.message}`);
-  } finally {
-    $("generateBtn").disabled = false;
-    $("generateBtn").textContent = "Generate Reply";
-  }
+    usage += 1; setText("usageCount", String(usage));
+    await saveReply(message,reply);
+    updateCounts(); status("Reply generated.");
+  }catch(e){ status("Error: " + e.message); }
+  $("generateBtn").disabled = false; $("generateBtn").textContent = "Generate Reply";
 }
 
-async function rewrite(action, button) {
-  if (!$("result").value.trim()) return;
-  const old = button.textContent;
-  button.disabled = true;
-  button.textContent = "Working...";
-  try {
-    const reply = await requestAI(action);
-    $("result").value = reply;
-    updateCounts();
-    addHistory($("message").value.trim(), reply);
-    setStatus("Updated reply saved.");
-  } catch (e) {
-    setStatus(`Error: ${e.message}`);
-  } finally {
-    button.disabled = false;
-    button.textContent = old;
-  }
+async function saveReply(message,reply){
+  const {data,error} = await sb.from("reply_history").insert({
+    user_id:currentUser.id,
+    customer_message:message,
+    reply,
+    category:selectedCategory,
+    language:$("replyLanguage").value,
+    tone:$("replyTone").value
+  }).select().single();
+  if(!error && data){ history.unshift(data); history=history.slice(0,10); renderHistory(); }
 }
 
-document.querySelectorAll(".category").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".category").forEach(x => x.classList.remove("active"));
-    btn.classList.add("active");
-    selectedCategory = btn.dataset.category;
-  });
+async function rewrite(action,button){
+  if(!$("result").value.trim()) return;
+  const old=button.textContent; button.disabled=true; button.textContent="Working...";
+  try{
+    const reply=await callAI(action);
+    $("result").value=reply; updateCounts();
+    await saveReply($("message").value.trim(),reply);
+    status("Updated reply saved.");
+  }catch(e){ status("Error: " + e.message); }
+  button.disabled=false; button.textContent=old;
+}
+
+function renderHistory(){
+  $("history").innerHTML = history.length ? history.map((x,i)=>`
+    <article class="history-item">
+      <div class="history-top"><span class="tag">${escapeHtml(x.category||"General")}</span><span class="date">${escapeHtml(new Date(x.created_at).toLocaleString())}</span></div>
+      <p class="history-msg">${escapeHtml(x.customer_message||"")}</p>
+      <p class="history-reply">${escapeHtml(x.reply||"")}</p>
+      <div class="history-buttons"><button data-use="${i}">Use reply</button><button data-copy="${i}">Copy</button></div>
+    </article>`).join("") : '<div class="history-empty">No replies saved yet.</div>';
+}
+
+function escapeHtml(t){return String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+function updateCounts(){setText("inputCount",`${$("message").value.length}/1000`);setText("charCount",`${$("result").value.length} characters`);}
+
+document.querySelectorAll(".category").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".category").forEach(x=>x.classList.remove("active")); b.classList.add("active"); selectedCategory=b.dataset.category;
+}));
+$("loginTab").onclick=()=>switchMode(false); $("signupTab").onclick=()=>switchMode(true); $("authBtn").onclick=auth; $("forgotBtn").onclick=forgot;
+$("logoutBtn").onclick=async()=>{await sb.auth.signOut();hideApp();};
+$("saveProfileBtn").onclick=saveProfile; $("generateBtn").onclick=generate; $("message").oninput=updateCounts;
+$("language").onchange=()=>$("replyLanguage").value=$("language").value; $("tone").onchange=()=>$("replyTone").value=$("tone").value;
+$("copyBtn").onclick=async()=>{await navigator.clipboard.writeText($("result").value);$("copyBtn").textContent="✓ Copied";setTimeout(()=>$("copyBtn").textContent="📋 Copy",1100);};
+$("whatsappBtn").onclick=()=>window.open(`https://wa.me/?text=${encodeURIComponent($("result").value)}`,"_blank");
+$("shorterBtn")?.addEventListener("click",()=>rewrite("shorter",$("shorterBtn"))); $("politeBtn")?.addEventListener("click",()=>rewrite("politer",$("politeBtn"))); $("professionalBtn")?.addEventListener("click",()=>rewrite("professional",$("professionalBtn")));
+$("clearHistoryBtn").onclick=async()=>{const {error}=await sb.from("reply_history").delete().eq("user_id",currentUser.id);if(!error){history=[];renderHistory();status("History cleared.");}};
+$("history").addEventListener("click",async e=>{
+  const use=e.target.closest("[data-use]"),copy=e.target.closest("[data-copy]");
+  if(use){const x=history[+use.dataset.use];$("message").value=x.customer_message;$("result").value=x.reply;selectedCategory=x.category||"General";document.querySelectorAll(".category").forEach(b=>b.classList.toggle("active",b.dataset.category===selectedCategory));$("resultSection").classList.remove("hidden");updateCounts();}
+  if(copy){const x=history[+copy.dataset.copy];await navigator.clipboard.writeText(x.reply);copy.textContent="Copied";}
 });
 
-$("saveProfileBtn").addEventListener("click", () => saveProfile(true));
-$("clearProfileBtn").addEventListener("click", clearProfile);
-$("generateBtn").addEventListener("click", generate);
-$("message").addEventListener("input", updateCounts);
-
-$("language").addEventListener("change", () => $("replyLanguage").value = $("language").value);
-$("tone").addEventListener("change", () => $("replyTone").value = $("tone").value);
-
-$("copyBtn").addEventListener("click", async () => {
-  if (!$("result").value) return;
-  try {
-    await navigator.clipboard.writeText($("result").value);
-    $("copyBtn").textContent = "✓ Copied";
-    setTimeout(() => $("copyBtn").textContent = "📋 Copy", 1200);
-  } catch {
-    $("result").focus(); $("result").select(); document.execCommand("copy");
-  }
-});
-
-$("whatsappBtn").addEventListener("click", () => {
-  if (!$("result").value) return;
-  window.open(`https://wa.me/?text=${encodeURIComponent($("result").value)}`, "_blank");
-});
-
-$("shorterBtn").addEventListener("click", () => rewrite("shorter", $("shorterBtn")));
-$("politeBtn").addEventListener("click", () => rewrite("politer", $("politeBtn")));
-$("professionalBtn").addEventListener("click", () => rewrite("professional", $("professionalBtn")));
-
-$("clearHistoryBtn").addEventListener("click", () => {
-  history = [];
-  storeHistory();
-});
-
-$("history").addEventListener("click", async (event) => {
-  const btn = event.target.closest("button[data-action]");
-  if (!btn) return;
-  const item = history[Number(btn.dataset.index)];
-  if (!item) return;
-
-  if (btn.dataset.action === "use") {
-    $("message").value = item.message;
-    $("result").value = item.reply;
-    selectedCategory = item.category;
-    document.querySelectorAll(".category").forEach(x => x.classList.toggle("active", x.dataset.category === selectedCategory));
-    updateCounts();
-    $("resultSection").classList.remove("hidden");
-    setStatus("Previous reply loaded.");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  } else if (btn.dataset.action === "copy") {
-    try {
-      await navigator.clipboard.writeText(item.reply);
-      btn.textContent = "Copied";
-      setTimeout(() => btn.textContent = "Copy", 1000);
-    } catch {}
-  }
-});
-
-loadProfile();
-updateCounts();
-renderHistory();
+(async()=>{const {data}=await sb.auth.getSession(); if(data.session) showApp(data.session.user); else hideApp(); sb.auth.onAuthStateChange((ev,s)=>{if(ev==="SIGNED_OUT")hideApp();});})();
