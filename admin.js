@@ -1,5 +1,5 @@
 const URL="https://penntuaofjveawocdvgp.supabase.co";
-const KEY="PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE";
+const KEY="sb_publishable_QKbxDKVM1s9X3SQpK4_mlw_gs7gwWCs";
 const sb=window.supabase.createClient(URL,KEY);
 const $=id=>document.getElementById(id);
 
