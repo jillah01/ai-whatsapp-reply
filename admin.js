@@ -2,7 +2,7 @@ const SUPABASE_URL =
   "https://penntuaofjveawocdvgp.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
-  "YOUR_EXISTING_SUPABASE_PUBLISHABLE_KEY";
+  "sb_publishable_QKbxDKVM1s9X3SQpK4_mlw_gs7gwWCs";
 
 const $ = (id) => document.getElementById(id);
 
