@@ -28,7 +28,13 @@ async function auth(){
   $("authBtn").disabled = true;
   try{
     if(signupMode){
-      const {data,error} = await sb.auth.signUp({email,password});
+      const { data, error } = await sb.auth.signUp({
+  email,
+  password,
+  options: {
+    emailRedirectTo: "https://jillah01.github.io/ai-whatsapp-reply/"
+  }
+});
       if(error) throw error;
       if(data.session) showApp(data.user);
       else authMessage("Account created. Check your email to confirm, then log in.");
