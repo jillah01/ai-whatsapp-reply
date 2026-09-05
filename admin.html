@@ -1,19 +1,46 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ReplyAI Admin</title><link rel="stylesheet" href="admin.css"></head>
-<body><main>
-<h1>ReplyAI Admin</h1>
-<p>Manage Free/Pro users.</p>
-<section id="login">
-<input id="email" type="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-<button id="loginBtn">Login</button><div id="msg"></div>
-</section>
-<section id="dash" class="hidden">
-<div class="bar"><span id="me"></span><button id="logout">Log out</button></div>
-<table><thead><tr><th>Email</th><th>Plan</th><th>Replies</th><th></th></tr></thead>
-<tbody id="users"></tbody></table>
-</section>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ReplyAI Admin</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<main>
+  <h1>ReplyAI Admin</h1>
+  <p>Manage Free/Pro users.</p>
+
+  <section id="login">
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+    <button id="loginBtn" type="button">Login</button>
+    <div id="msg"></div>
+  </section>
+
+  <section id="dash" class="hidden">
+    <div class="bar">
+      <span id="me"></span>
+      <button id="logout" type="button">Log out</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Plan</th>
+          <th>Replies</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="users"></tbody>
+    </table>
+  </section>
 </main>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="admin.js"></script></body></html>
+<script src="admin.js?v=8"></script>
+
+</body>
+</html>
