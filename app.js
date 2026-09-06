@@ -1,5 +1,6 @@
 const SUPABASE_URL="https://penntuaofjveawocdvgp.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY="PASTE_YOUR_EXISTING_SUPABASE_PUBLISHABLE_KEY_HERE";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_QKbxDKVM1s9X3SQpK4_mlw_gs7gwWCs
+";
 const API_URL="https://reply-ai-api.xjillah.workers.dev";
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 let signup=false,currentUser=null,category="General",history=[],usage={count:0,limit:20,remaining:20,plan:"free"};
