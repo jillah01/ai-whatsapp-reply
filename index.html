@@ -1,114 +1,58 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#111827">
-  <title>ReplyAI — AI Customer Replies</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+<meta name="description" content="ReplyAI creates ready-to-send WhatsApp customer replies for small businesses.">
+<title>ReplyAI — Customer replies in seconds</title>
+<link rel="stylesheet" href="landing.css">
 </head>
 <body>
-<main class="app">
-<header class="hero">
-  <div class="logo">Reply<span>AI</span></div>
-  <p>Professional customer replies in seconds.</p>
+<header class="nav">
+  <a class="brand" href="index.html">Reply<span>AI</span></a>
+  <nav><a href="#features">Features</a><a href="#pricing">Pricing</a><a class="nav-btn" href="app.html">Start free</a></nav>
 </header>
 
-<section id="authCard" class="card auth">
-  <div class="tabs">
-    <button id="loginTab" class="tab active" type="button">Login</button>
-    <button id="signupTab" class="tab" type="button">Create account</button>
-  </div>
-  <h2 id="authTitle">Welcome back</h2>
-  <p id="authSubtitle">Login with your email and password.</p>
-  <label for="email">Email</label>
-  <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
-  <label for="password">Password</label>
-  <input id="password" type="password" autocomplete="current-password" placeholder="At least 6 characters">
-  <button id="authBtn" class="primary" type="button">Login</button>
-  <button id="forgotBtn" class="text-btn" type="button">Forgot password?</button>
-  <div id="authMessage" class="message"></div>
+<main>
+<section class="hero">
+  <div class="pill">AI replies for small businesses</div>
+  <h1>Reply to customers<br><span>in seconds.</span></h1>
+  <p>Turn WhatsApp messages into natural, professional replies in Hindi, Hinglish or English.</p>
+  <div class="actions"><a class="btn dark" href="app.html">Start free</a><a class="btn light" href="#pricing">See pricing</a></div>
+  <small>20 AI replies every month on Free • No credit card required</small>
 </section>
 
-<section id="appSection" class="hidden">
-  <div class="account-bar">
-    <div><strong id="userEmail"></strong><small>Signed in</small></div>
-    <button id="logoutBtn" class="secondary compact" type="button">Log out</button>
+<section id="features" class="section">
+  <div class="eyebrow">WHY REPLYAI</div>
+  <h2>Built for the messages you answer every day.</h2>
+  <div class="feature-grid">
+    <article><div class="ico">📦</div><h3>Orders & delivery</h3><p>Reply quickly to customers asking where their order is or when it will arrive.</p></article>
+    <article><div class="ico">😡</div><h3>Complaints</h3><p>Turn angry customer messages into calm, empathetic and professional replies.</p></article>
+    <article><div class="ico">💬</div><h3>Indian languages</h3><p>Use Hindi, Hinglish or English with the tone that fits your business.</p></article>
   </div>
-
-  <section class="card">
-    <div class="section-title">
-      <div><h2>Business profile</h2><p>Saved to your account.</p></div>
-    </div>
-    <div class="grid2">
-      <div><label for="businessName">Business name</label><input id="businessName" maxlength="80" placeholder="Sharma Electronics"></div>
-      <div><label for="businessType">Business type</label><input id="businessType" maxlength="80" placeholder="Mobile shop"></div>
-    </div>
-    <div class="grid2">
-      <div><label for="language">Default language</label><select id="language"><option>Hinglish</option><option>Hindi</option><option>English</option></select></div>
-      <div><label for="tone">Default tone</label><select id="tone"><option>Friendly</option><option>Professional</option><option>Very Short</option><option>Polite</option><option>Apologetic</option></select></div>
-    </div>
-    <label for="style">Business voice</label>
-    <textarea id="style" class="small" maxlength="300" placeholder="Warm, concise, respectful and simple Hinglish."></textarea>
-    <button id="saveProfileBtn" class="secondary" type="button">Save profile</button>
-    <div id="profileMessage" class="message"></div>
-  </section>
-
-  <section class="card">
-    <div class="section-title">
-      <div><h2>Quick reply</h2><p>Choose a type, tone and language.</p></div>
-      <div class="usage"><strong id="usageCount">0/20</strong><small>free replies this month</small></div>
-    </div>
-
-    <div class="category-grid">
-      <button class="category active" data-category="General" type="button">💬<span>General</span></button>
-      <button class="category" data-category="Order update" type="button">📦<span>Order</span></button>
-      <button class="category" data-category="Payment reminder" type="button">💰<span>Payment</span></button>
-      <button class="category" data-category="Delivery update" type="button">🚚<span>Delivery</span></button>
-      <button class="category" data-category="Customer complaint" type="button">😡<span>Complaint</span></button>
-      <button class="category" data-category="Refund or return" type="button">🔄<span>Refund</span></button>
-      <button class="category" data-category="Appointment" type="button">📅<span>Appointment</span></button>
-      <button class="category" data-category="Review request" type="button">⭐<span>Review</span></button>
-    </div>
-
-    <label for="message">Customer message</label>
-    <textarea id="message" maxlength="1000" placeholder="bhai mera order kab ayega?"></textarea>
-    <div class="meta"><span id="inputCount">0/1000</span><span>10 requests/minute protection</span></div>
-
-    <div class="grid2">
-      <div><label for="replyLanguage">Language</label><select id="replyLanguage"><option>Hinglish</option><option>Hindi</option><option>English</option></select></div>
-      <div><label for="replyTone">Tone</label><select id="replyTone"><option>Friendly</option><option>Professional</option><option>Very Short</option><option>Polite</option><option>Apologetic</option></select></div>
-    </div>
-
-    <button id="generateBtn" class="primary" type="button">Generate Reply</button>
-    <div id="status" class="message"></div>
-
-    <div id="resultSection" class="hidden result">
-      <div class="result-head"><label for="result">Your reply</label><span id="charCount">0 characters</span></div>
-      <textarea id="result" readonly></textarea>
-      <div class="grid2">
-        <button id="copyBtn" class="secondary" type="button">📋 Copy</button>
-        <button id="whatsappBtn" class="secondary" type="button">🟢 WhatsApp</button>
-      </div>
-      <div class="rewrite-actions">
-        <button id="shorterBtn" type="button">Make shorter</button>
-        <button id="politeBtn" type="button">Make more polite</button>
-        <button id="professionalBtn" type="button">Make professional</button>
-      </div>
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="section-title">
-      <div><h2>Recent replies</h2><p>Saved to your account.</p></div>
-      <button id="clearHistoryBtn" class="text-btn" type="button">Clear all</button>
-    </div>
-    <div id="history" class="history"></div>
-  </section>
 </section>
+
+<section class="demo section">
+  <div><div class="eyebrow">HOW IT WORKS</div><h2>Paste. Generate. Send.</h2><p>Pick a message type, choose a tone, generate your reply, and open WhatsApp.</p><a class="text-link" href="app.html">Try ReplyAI →</a></div>
+  <div class="chat">
+    <div class="label">Customer</div><div class="bubble customer">bhai mera order kab ayega?</div>
+    <div class="arrow">↓</div>
+    <div class="label">ReplyAI</div><div class="bubble ai">Namaste! Aapke order ka status check karke aapko update karte hain. Dhanyavaad 😊</div>
+  </div>
+</section>
+
+<section id="pricing" class="section">
+  <div class="eyebrow">PRICING</div><h2>Start free. Upgrade when you need more.</h2>
+  <div class="pricing">
+    <article class="price"><h3>Free</h3><div class="amount">₹0 <small>/ month</small></div><p>For trying ReplyAI.</p><ul><li>20 AI replies/month</li><li>Hindi, Hinglish & English</li><li>Reply categories</li><li>WhatsApp copy</li></ul><a class="btn light full" href="app.html">Start free</a></article>
+    <article class="price featured"><div class="popular">POPULAR</div><h3>Pro</h3><div class="amount">₹149 <small>/ month</small></div><p>For businesses replying every day.</p><ul><li>500 AI replies/month</li><li>Business profile</li><li>Reply history</li><li>Rewrite tools</li><li>Priority features</li></ul><a class="btn dark full" href="app.html">Coming soon</a></article>
+  </div>
+</section>
+
+<section class="cta"><h2>Ready to save time?</h2><p>Create a free account and generate your first customer reply.</p><a class="btn light" href="app.html">Start ReplyAI free</a></section>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js"></script>
+<footer><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><span>© 2026 ReplyAI</span></footer>
 </body>
 </html>

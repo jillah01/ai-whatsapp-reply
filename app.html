@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>ReplyAI — App</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main class="app">
+<header class="top"><a class="brand" href="index.html">Reply<span>AI</span></a><a class="back" href="index.html">← Home</a></header>
+
+<section id="authCard" class="card auth">
+  <div class="tabs"><button id="loginTab" class="tab active">Login</button><button id="signupTab" class="tab">Create account</button></div>
+  <h1 id="authTitle">Welcome back</h1><p id="authSubtitle">Login with your email and password.</p>
+  <label>Email</label><input id="email" type="email" autocomplete="email" placeholder="you@example.com">
+  <label>Password</label><input id="password" type="password" autocomplete="current-password" placeholder="At least 6 characters">
+  <button id="authBtn" class="primary">Login</button>
+  <button id="forgotBtn" class="link">Forgot password?</button><div id="authMessage" class="message"></div>
+</section>
+
+<section id="appSection" class="hidden">
+  <div class="account"><div><strong id="userEmail"></strong><small>Signed in</small></div><button id="logoutBtn" class="secondary">Log out</button></div>
+
+  <section class="card">
+    <div class="head"><div><h2>Business profile</h2><p>Saved to your ReplyAI account.</p></div><button id="saveProfileBtn" class="secondary">Save</button></div>
+    <div class="grid2"><div><label>Business name</label><input id="businessName" maxlength="80" placeholder="Sharma Electronics"></div><div><label>Business type</label><input id="businessType" maxlength="80" placeholder="Mobile shop"></div></div>
+    <div class="grid2"><div><label>Default language</label><select id="language"><option>Hinglish</option><option>Hindi</option><option>English</option></select></div><div><label>Default tone</label><select id="tone"><option>Friendly</option><option>Professional</option><option>Very Short</option><option>Polite</option><option>Apologetic</option></select></div></div>
+    <label>Business voice</label><textarea id="style" class="small" maxlength="300" placeholder="Warm, concise, respectful and simple Hinglish."></textarea>
+    <div id="profileMessage" class="message"></div>
+  </section>
+
+  <section class="card">
+    <div class="head"><div><h2>Quick reply</h2><p>Choose a type, tone and language.</p></div><div class="usage"><strong id="usageCount">0/20</strong><small id="usageLabel">free replies this month</small></div></div>
+    <div class="categories">
+      <button class="category active" data-category="General">💬<span>General</span></button><button class="category" data-category="Order update">📦<span>Order</span></button><button class="category" data-category="Payment reminder">💰<span>Payment</span></button><button class="category" data-category="Delivery update">🚚<span>Delivery</span></button><button class="category" data-category="Customer complaint">😡<span>Complaint</span></button><button class="category" data-category="Refund or return">🔄<span>Refund</span></button><button class="category" data-category="Appointment">📅<span>Appointment</span></button><button class="category" data-category="Review request">⭐<span>Review</span></button>
+    </div>
+    <label>Customer message</label><textarea id="message" maxlength="1000" placeholder="bhai mera order kab ayega?"></textarea>
+    <div class="meta"><span id="inputCount">0/1000</span><span>Protected API</span></div>
+    <div class="grid2"><div><label>Language</label><select id="replyLanguage"><option>Hinglish</option><option>Hindi</option><option>English</option></select></div><div><label>Tone</label><select id="replyTone"><option>Friendly</option><option>Professional</option><option>Very Short</option><option>Polite</option><option>Apologetic</option></select></div></div>
+    <button id="generateBtn" class="primary">Generate Reply</button><div id="status" class="message"></div>
+    <div id="resultSection" class="hidden result"><div class="resulthead"><label>Your reply</label><span id="charCount">0 characters</span></div><textarea id="result" readonly></textarea>
+      <div class="grid2"><button id="copyBtn" class="secondary">📋 Copy</button><button id="whatsappBtn" class="secondary">🟢 WhatsApp</button></div>
+      <div class="rewrites"><button id="shorterBtn">Make shorter</button><button id="politeBtn">Make more polite</button><button id="professionalBtn">Make professional</button></div>
+    </div>
+  </section>
+
+  <section class="card"><div class="head"><div><h2>Recent replies</h2><p>Your last 10 saved replies.</p></div><button id="clearHistoryBtn" class="link">Clear all</button></div><div id="history"></div></section>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+</body>
+</html>
